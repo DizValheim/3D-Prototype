@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BallCode : MonoBehaviour
+public class BallBehaviour : MonoBehaviour
 {
     [SerializeField]GameObject ball;
     [SerializeField]float UpwardForce;
