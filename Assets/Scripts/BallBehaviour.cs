@@ -3,12 +3,14 @@ using UnityEngine;
 public class BallBehaviour : MonoBehaviour
 {
     [SerializeField]GameObject ball;
-    [SerializeField]float UpwardForce;
-    [SerializeField]float ForwardForce;
-    public Vector3 ScreenPosition, WorldPosition, SpawnPoint;
-    public Rigidbody rb;
+    [SerializeField]float upwardForce=-15;
+    [SerializeField]float forwardForce=20;
+    private Vector3 screenPosition;
+    private Vector3 worldPosition;
+    private Vector3 spawnPoint;
+    private Rigidbody rb;
     
-    public Camera MainCamera;
+    private Camera MainCamera;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,20 +21,20 @@ public class BallBehaviour : MonoBehaviour
     void Update()
     {
         //Code for mouse position
-        ScreenPosition=Input.mousePosition;
-        ScreenPosition.z=Camera.main.nearClipPlane +1;
-        WorldPosition=Camera.main.ScreenToWorldPoint(ScreenPosition);
-        SpawnPoint=MainCamera.transform.position;
-        SpawnPoint.z+=2;
+        screenPosition=Input.mousePosition;
+        screenPosition.z=Camera.main.nearClipPlane +1;
+        worldPosition=Camera.main.ScreenToWorldPoint(screenPosition);
+        spawnPoint=MainCamera.transform.position;
+        spawnPoint.z+=2;
 
 
         //Code for ball initialization and destruction
         if(Input.GetKeyDown(KeyCode.Mouse0))
         {
-            GameObject SpawnedBall=Instantiate(ball,SpawnPoint,Quaternion.identity);
-            rb=SpawnedBall.gameObject.GetComponent<Rigidbody>();
-            rb.AddForce(transform.up*UpwardForce,ForceMode.Impulse);    //Upward Impulse
-            rb.AddForce(WorldPosition*ForwardForce,ForceMode.Impulse);  //Forward Impulse
+            GameObject SpawnedBall=Instantiate(ball,spawnPoint,Quaternion.identity);
+            rb=SpawnedBall.GetComponent<Rigidbody>();
+            rb.AddForce(transform.up*upwardForce,ForceMode.Impulse);    //Upward Impulse
+            rb.AddForce(worldPosition*forwardForce,ForceMode.Impulse);  //Forward Impulse
             Destroy(SpawnedBall,4f);        //Destroy ball entity
         }
     }
