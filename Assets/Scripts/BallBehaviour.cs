@@ -2,47 +2,46 @@ using UnityEngine;
 
 public class BallBehaviour : MonoBehaviour
 {
-    [SerializeField]GameObject ball;
-    [SerializeField]float upwardForce=-15; //Always write f after float variables
-    [SerializeField]float forwardForce=20;  
-    
+    [SerializeField] GameObject ball;
+    [SerializeField] float forwardForce = 20f;
+
     private Vector3 screenPosition;
     private Vector3 worldPosition;
     private Vector3 spawnPoint;
     private Rigidbody rb;
-    
-    private Camera mainCamera;  //I Changed it to mainCamera from MainCamera
 
+    private Camera mainCamera;
 
     // Start is called before the first frame update
     void Start()
     {
-        mainCamera = Camera.main;   //You can use Camera.main instead GetComponent (GetComponent allocates memory even if no element is found) 
-                                    //to get the reference to main camera. It's preferable since it's predefined and has less chance of errors...
+        mainCamera = Camera.main;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Code for mouse position
-        screenPosition=Input.mousePosition;
-        screenPosition.z=Camera.main.nearClipPlane +1;
-        worldPosition=Camera.main.ScreenToWorldPoint(screenPosition);
-        spawnPoint=mainCamera.transform.position;
-        spawnPoint.z+=2;
+        // Code for mouse position
+        screenPosition = Input.mousePosition;
+        screenPosition.z = mainCamera.nearClipPlane + 1;
+        worldPosition = mainCamera.ScreenToWorldPoint(screenPosition);
+        spawnPoint = mainCamera.transform.position;
+        spawnPoint.z += 1;
 
-
-        //Code for ball initialization and destruction
-        if(Input.GetKeyDown(KeyCode.Mouse0))
+        // Code for ball initialization and destruction
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            GameObject SpawnedBall = Instantiate(ball,spawnPoint,Quaternion.identity);  //The ball should be named spawnedBall (Naming rule violation)
-            rb=SpawnedBall.GetComponent<Rigidbody>();
-            rb.AddForce(transform.up*upwardForce,ForceMode.Impulse);    //Upward Impulse
-            rb.AddForce(worldPosition*forwardForce,ForceMode.Impulse);  //Forward Impulse
-            Destroy(SpawnedBall,4f);        //Destroy ball entity
+            GameObject spawnedBall = Instantiate(ball, spawnPoint, Quaternion.identity);
+            rb = spawnedBall.GetComponent<Rigidbody>();
+
+            // Calculate the direction vector from the ball's position to the world position of the mouse click
+            Vector3 direction = (worldPosition - mainCamera.transform.position).normalized;
+
+            // Apply the forward impulse in the direction of the mouse click
+            rb.AddForce(direction * forwardForce, ForceMode.Impulse);
+
+            // Destroy ball entity
+            Destroy(spawnedBall, 4f);
         }
-
-        //Also a suggestion: Try to give space in between variables and operators (It'll be a lot more readable for someone else reading your code)
-
-    }    
+    }
 }
