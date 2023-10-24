@@ -3,12 +3,13 @@ using UnityEngine;
 public class BallBehaviour : MonoBehaviour
 {
     [SerializeField] GameObject ball;
-    [SerializeField] float forwardForce = 20f;
+    [SerializeField] float forwardForce = 50f;
 
     private Vector3 screenPosition;
     private Vector3 worldPosition;
     private Vector3 spawnPoint;
     private Rigidbody rb;
+    public int ballCount=10;
 
     private Camera mainCamera;
 
@@ -29,7 +30,7 @@ public class BallBehaviour : MonoBehaviour
         spawnPoint.z += 1;
 
         // Code for ball initialization and destruction
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0) && ballCount > 0)
         {
             GameObject spawnedBall = Instantiate(ball, spawnPoint, Quaternion.identity);
             rb = spawnedBall.GetComponent<Rigidbody>();
@@ -42,6 +43,7 @@ public class BallBehaviour : MonoBehaviour
 
             // Destroy ball entity
             Destroy(spawnedBall, 4f);
+            ballCount--;
         }
     }
 }
